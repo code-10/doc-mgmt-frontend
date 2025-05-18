@@ -1,0 +1,24 @@
+<div class="container mt-4">
+  <h3>Ingestion Management</h3>
+
+  <table class="table table-bordered mt-3">
+    <thead class="table-light">
+      <tr>
+        <th>Document ID</th>
+        <th>Status</th>
+        <th>Completed At</th>
+        <th *ngIf="isAdminOrEditor">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ingestion of ingestions">
+        <td>{{ ingestion.document }}</td>
+        <td>{{ ingestion.status }}</td>
+        <td>{{ ingestion.completed_at ? (ingestion.completed_at) : 'In Progress' }}</td>
+        <td *ngIf="isAdminOrEditor">
+          <button class="btn btn-sm btn-primary" (click)="trigger(ingestion.document)">Re-trigger</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

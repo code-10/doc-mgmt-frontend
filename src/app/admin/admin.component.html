@@ -1,0 +1,35 @@
+<div class="container mt-4">
+  <h2>User Management</h2>
+  <table class="table table-bordered table-striped mt-3">
+    <thead class="thead-dark">
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Current Role</th>
+        <th>Change Role</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let user of users; let i = index" class="align-middle">
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            
+            <td *ngIf="editIndex !== i">{{ user.role }}</td>
+            <td *ngIf="editIndex === i">
+            <select class="form-select form-select-sm w-auto" [(ngModel)]="selectedRole">
+                <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+            </select>
+            </td>
+
+            <td *ngIf="editIndex !== i">
+            <button class="btn btn-outline-primary btn-sm" (click)="enableEdit(i, user.role)">Edit</button>
+            </td>
+            
+            <td *ngIf="editIndex === i" class="d-flex gap-2">
+            <button class="btn btn-success btn-sm" (click)="saveRole(user)">Save</button>
+            <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Cancel</button>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+</div>

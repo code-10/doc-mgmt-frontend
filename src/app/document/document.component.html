@@ -1,0 +1,79 @@
+<div class="container mt-4">
+  <h3>Upload Document</h3>
+
+  <div class="mb-3">
+    <label class="form-label">Title</label>
+    <input type="text" [(ngModel)]="fileTitle" class="form-control" placeholder="Enter file title" />
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Choose File</label>
+    <input #fileInput type="file" (change)="onFileSelected($event)" class="form-control" />
+  </div>
+
+  <button class="btn btn-primary" (click)="upload()" [disabled]="!selectedFile || uploading">
+    Upload
+  </button>
+
+  <div *ngIf="uploading" class="mt-2">
+    <div class="progress">
+      <div class="progress-bar" [attr.aria-valuenow]="uploadProgress">
+        {{ uploadProgress }}%
+      </div>
+    </div>
+  </div>
+
+  <hr />
+
+  <h3>Documents</h3>
+  <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Filename</th>
+      <th>Uploaded At</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let doc of documents; let i = index">
+      <td *ngIf="editIndex !== i">{{ doc.title }}</td>
+      <td *ngIf="editIndex === i">
+        <input type="text" [(ngModel)]="editTitle" class="form-control form-control-sm" />
+      </td>
+
+      <td *ngIf="editIndex !== i">{{ getDisplayFileName(doc.file) }}</td>
+      <td *ngIf="editIndex === i">
+        <input type="file" (change)="onEditFileSelected($event)" class="form-control form-control-sm" />
+        <small class="text-muted">Leave empty to keep current file</small>
+      </td>
+
+      <td>{{ doc.uploaded_at | date: 'medium' }}</td>
+      <td *ngIf="editIndex !== i">
+        <button *ngIf="userRole === 'admin' || userRole === 'editor'" 
+                class="btn btn-outline-primary btn-sm" 
+                (click)="startEdit(i, doc)">
+            Edit
+        </button>
+
+        <button *ngIf="userRole === 'admin' || userRole === 'editor'" 
+                class="btn btn-danger btn-sm ms-2" 
+                (click)="deleteDocument(doc.id)">
+            Delete
+        </button>
+
+        <button *ngIf="userRole === 'admin' || userRole === 'editor'" 
+                class="btn btn-secondary btn-sm ms-2" 
+                (click)="triggerIngestion(doc.id)">
+            Trigger ingestion
+        </button>
+      </td>
+
+      <td *ngIf="editIndex === i" class="d-flex gap-2">
+        <button class="btn btn-success btn-sm" (click)="saveEdit(doc)">Save</button>
+        <button class="btn btn-secondary btn-sm" (click)="cancelEdit()">Cancel</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>

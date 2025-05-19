@@ -12,6 +12,13 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('access_token');
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+  }
+
   registerUser(userData: any): Observable<any> {
     return this.http.post(`${this.usersApi}register/`, userData);
   }
@@ -21,11 +28,7 @@ export class AuthService {
   }
 
   getCurrentUser(): Observable<any> {
-    const token = localStorage.getItem('access_token');
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-    return this.http.get(`${this.usersApi}current_user/`, { headers });
+    return this.http.get(`${this.usersApi}current_user/`, { headers: this.getAuthHeaders(), });
   }
 
   setLoggedIn(status: boolean) {

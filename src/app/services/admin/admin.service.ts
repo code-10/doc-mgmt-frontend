@@ -10,27 +10,22 @@ export class AdminService {
 
   constructor(private http: HttpClient) {}
 
-  getUsers(): Observable<any[]> {
+  private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('access_token');
-    const headers = new HttpHeaders({
+    return new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
-    return this.http.get<any[]>(`${this.baseUrl}user_list/`,{headers});
+  }
+
+  getUsers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}user_list/`,{headers:this.getAuthHeaders()});
   }
 
   updateUser(id: number, data: any): Observable<any> {
-    const token = localStorage.getItem('access_token');
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-    return this.http.put(`${this.baseUrl}${id}/`, data, {headers});
+    return this.http.put(`${this.baseUrl}${id}/`, data, {headers:this.getAuthHeaders()});
   }
 
   deleteUser(id: number): Observable<any> {
-    const token = localStorage.getItem('access_token');
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-    return this.http.delete(`${this.baseUrl}${id}/`,{headers});
+    return this.http.delete(`${this.baseUrl}${id}/`,{headers:this.getAuthHeaders()});
   }
 }
